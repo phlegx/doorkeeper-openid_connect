@@ -2,7 +2,7 @@
 
 require 'doorkeeper'
 require 'active_model'
-require 'json/jwt'
+require 'jwt'
 
 require 'doorkeeper/request'
 require 'doorkeeper/request/id_token'
@@ -50,11 +50,11 @@ module Doorkeeper
         else
           OpenSSL::PKey.read(configuration.signing_key)
         end
-      JSON::JWK.new(key)
+      JWT::JWK.new(key)
     end
 
     def self.signing_key_normalized
-      key = signing_key
+      key = signing_key.export
       case key[:kty].to_sym
       when :RSA
         key.slice(:kty, :kid, :e, :n)
